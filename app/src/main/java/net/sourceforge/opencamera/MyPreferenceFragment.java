@@ -721,39 +721,41 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
             pg.removePreference(pref);
         }
 
-        {
-            final Preference pref = findPreference("preference_online_help");
-            pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference arg0) {
-                    if( pref.getKey().equals("preference_online_help") ) {
-                        if( MyDebug.LOG )
-                            Log.d(TAG, "user clicked online help");
-                        MainActivity main_activity = (MainActivity)MyPreferenceFragment.this.getActivity();
-                        main_activity.launchOnlineHelp();
-                        return false;
-                    }
-                    return false;
-                }
-            });
-        }
+        //FYP
+//        {
+//            final Preference pref = findPreference("preference_online_help");
+//            pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+//                @Override
+//                public boolean onPreferenceClick(Preference arg0) {
+//                    if( pref.getKey().equals("preference_online_help") ) {
+//                        if( MyDebug.LOG )
+//                            Log.d(TAG, "user clicked online help");
+//                        MainActivity main_activity = (MainActivity)MyPreferenceFragment.this.getActivity();
+//                        main_activity.launchOnlineHelp();
+//                        return false;
+//                    }
+//                    return false;
+//                }
+//            });
+//        }
 
-        {
-            final Preference pref = findPreference("preference_privacy_policy");
-            pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference arg0) {
-                    if( pref.getKey().equals("preference_privacy_policy") ) {
-                        if( MyDebug.LOG )
-                            Log.d(TAG, "user clicked privacy policy");
-                        MainActivity main_activity = (MainActivity)MyPreferenceFragment.this.getActivity();
-                        main_activity.launchOnlinePrivacyPolicy();
-                        return false;
-                    }
-                    return false;
-                }
-            });
-        }
+        //FYP
+//        {
+//            final Preference pref = findPreference("preference_privacy_policy");
+//            pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+//                @Override
+//                public boolean onPreferenceClick(Preference arg0) {
+//                    if( pref.getKey().equals("preference_privacy_policy") ) {
+//                        if( MyDebug.LOG )
+//                            Log.d(TAG, "user clicked privacy policy");
+//                        MainActivity main_activity = (MainActivity)MyPreferenceFragment.this.getActivity();
+//                        main_activity.launchOnlinePrivacyPolicy();
+//                        return false;
+//                    }
+//                    return false;
+//                }
+//            });
+//        }
 
         {
             ListPreference pref = (ListPreference)findPreference("preference_ghost_image");
@@ -910,33 +912,33 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
             });
         }
 
-        {
-            final Preference pref = findPreference("preference_donate");
-            pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference arg0) {
-                    if( pref.getKey().equals("preference_donate") ) {
-                        if( MyDebug.LOG )
-                            Log.d(TAG, "user clicked to donate");
-            	        /*Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MainActivity.getDonateMarketLink()));
-            	        try {
-            	        	startActivity(browserIntent);
-            	        }
-            			catch(ActivityNotFoundException e) {
-            				// needed in case market:// not supported
-            				if( MyDebug.LOG )
-            					Log.d(TAG, "can't launch market:// intent");
-                	        browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MainActivity.getDonateLink()));
-            	        	startActivity(browserIntent);
-            			}*/
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MainActivity.DonateLink));
-                        startActivity(browserIntent);
-                        return false;
-                    }
-                    return false;
-                }
-            });
-        }
+//        {
+//            final Preference pref = findPreference("preference_donate");
+//            pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+//                @Override
+//                public boolean onPreferenceClick(Preference arg0) {
+//                    if( pref.getKey().equals("preference_donate") ) {
+//                        if( MyDebug.LOG )
+//                            Log.d(TAG, "user clicked to donate");
+//            	        /*Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MainActivity.getDonateMarketLink()));
+//            	        try {
+//            	        	startActivity(browserIntent);
+//            	        }
+//            			catch(ActivityNotFoundException e) {
+//            				// needed in case market:// not supported
+//            				if( MyDebug.LOG )
+//            					Log.d(TAG, "can't launch market:// intent");
+//                	        browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MainActivity.getDonateLink()));
+//            	        	startActivity(browserIntent);
+//            			}*/
+//                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MainActivity.DonateLink));
+//                        startActivity(browserIntent);
+//                        return false;
+//                    }
+//                    return false;
+//                }
+//            });
+//        }
 
         {
             final Preference pref = findPreference("preference_about");
@@ -1439,6 +1441,9 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
                 }
             });
         }
+        PreferenceGroup parent = (PreferenceGroup)this.findPreference("preference_category_camera_quality");
+        PreferenceGroup pg = (PreferenceGroup)this.findPreference("preference_screen_photo_settings");
+        parent.removePreference(pg);
     }
 
     /** Removes an entry and value pair from a ListPreference, if it exists.

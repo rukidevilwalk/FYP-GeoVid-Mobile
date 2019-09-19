@@ -76,33 +76,34 @@
             android:defaultValue="false"
             />
 
-        <ListPreference
-            android:key="preference_timer"
-            android:title="@string/preference_timer"
-            android:summary="%s"
-            android:icon="@drawable/ic_timer_white_48dp"
-            android:entries="@array/preference_timer_entries"
-            android:entryValues="@array/preference_timer_values"
-            android:defaultValue="0"
-            />
+<!--        FYP-->
+<!--        <ListPreference-->
+<!--            android:key="preference_timer"-->
+<!--            android:title="@string/preference_timer"-->
+<!--            android:summary="%s"-->
+<!--            android:icon="@drawable/ic_timer_white_48dp"-->
+<!--            android:entries="@array/preference_timer_entries"-->
+<!--            android:entryValues="@array/preference_timer_values"-->
+<!--            android:defaultValue="0"-->
+<!--            />-->
 
-        <ListPreference 
-            android:key="preference_burst_mode"
-            android:title="@string/preference_burst_mode"
-            android:summary="%s"
-            android:entries="@array/preference_burst_mode_entries"
-            android:entryValues="@array/preference_burst_mode_values"
-            android:defaultValue="1"
-            />
+<!--        <ListPreference -->
+<!--            android:key="preference_burst_mode"-->
+<!--            android:title="@string/preference_burst_mode"-->
+<!--            android:summary="%s"-->
+<!--            android:entries="@array/preference_burst_mode_entries"-->
+<!--            android:entryValues="@array/preference_burst_mode_values"-->
+<!--            android:defaultValue="1"-->
+<!--            />-->
 
-        <ListPreference
-            android:key="preference_burst_interval"
-            android:title="@string/preference_burst_interval"
-            android:summary="%s"
-            android:entries="@array/preference_burst_interval_entries"
-            android:entryValues="@array/preference_burst_interval_values"
-            android:defaultValue="0"
-            />
+<!--        <ListPreference-->
+<!--            android:key="preference_burst_interval"-->
+<!--            android:title="@string/preference_burst_interval"-->
+<!--            android:summary="%s"-->
+<!--            android:entries="@array/preference_burst_interval_entries"-->
+<!--            android:entryValues="@array/preference_burst_interval_values"-->
+<!--            android:defaultValue="0"-->
+<!--            />-->
 
         <PreferenceScreen
             android:key="preference_screen_camera_controls_more"
@@ -668,21 +669,23 @@
         android:key="preference_category_camera_quality"
         android:title="@string/preference_category_camera_quality">
 
+<!--        FYP-->
         <PreferenceScreen
             android:key="preference_screen_photo_settings"
             android:title="@string/preference_screen_photo_settings"
             android:icon="@drawable/take_photo_pref"
+            android:shouldDisableView="true"
             android:persistent="false">
-    
+
             <!--  if we move this to another PreferenceGroup, we should update code to remove this Preference -->
-            <ListPreference 
+            <ListPreference
                 android:key="preference_resolution"
                 android:title="@string/preference_resolution"
                 android:summary="%s"
                 android:icon="@drawable/ic_photo_size_select_large_white_48dp"
                 />
-        
-            <ListPreference 
+
+            <ListPreference
                 android:key="preference_quality"
                 android:title="@string/preference_quality"
                 android:summary="@string/preference_quality_summary"
@@ -699,7 +702,7 @@
                 />
 
             <!--  if we move this to another PreferenceGroup, we should update code to remove this Preference -->
-            <ListPreference 
+            <ListPreference
                 android:key="preference_raw"
                 android:title="@string/preference_raw"
                 android:summary="%s"
@@ -834,8 +837,8 @@
                 android:key="preference_category_stamp"
                 android:title="@string/preference_category_stamp"
                 >
-        
-                <ListPreference 
+
+                <ListPreference
                     android:key="preference_stamp"
                     android:title="@string/preference_stamp"
                     android:icon="@drawable/ic_text_format_white_48dp"
@@ -844,8 +847,8 @@
                     android:entryValues="@array/preference_stamp_values"
                     android:defaultValue="preference_stamp_no"
                     />
-    
-                <ListPreference 
+
+                <ListPreference
                     android:key="preference_stamp_dateformat"
                     android:title="@string/preference_stamp_dateformat"
                     android:summary="%s"
@@ -853,8 +856,8 @@
                     android:entryValues="@array/preference_stamp_dateformat_values"
                     android:defaultValue="preference_stamp_dateformat_default"
                     />
-    
-                <ListPreference 
+
+                <ListPreference
                     android:key="preference_stamp_timeformat"
                     android:title="@string/preference_stamp_timeformat"
                     android:summary="%s"
@@ -862,8 +865,8 @@
                     android:entryValues="@array/preference_stamp_timeformat_values"
                     android:defaultValue="preference_stamp_timeformat_default"
                     />
-    
-                <ListPreference 
+
+                <ListPreference
                     android:key="preference_stamp_gpsformat"
                     android:title="@string/preference_stamp_gpsformat"
                     android:summary="%s"
@@ -899,8 +902,8 @@
                     android:inputType="text"
                     android:defaultValue=""
                     />
-    
-                <ListPreference 
+
+                <ListPreference
                     android:key="preference_stamp_fontsize"
                     android:title="@string/preference_stamp_fontsize"
                     android:summary="@string/preference_stamp_fontsize_summary"
@@ -908,8 +911,8 @@
                     android:entryValues="@array/preference_stamp_fontsize_values"
                     android:defaultValue="12"
                     />
-    
-                <ListPreference 
+
+                <ListPreference
                     android:key="preference_stamp_font_color"
                     android:title="@string/preference_stamp_font_color"
                     android:summary="@string/preference_stamp_font_color_summary"
@@ -917,8 +920,8 @@
                     android:entryValues="@array/preference_angle_highlight_color_values"
                     android:defaultValue="#ffffff"
                     />
-    
-                <ListPreference 
+
+                <ListPreference
                     android:key="preference_stamp_style"
                     android:title="@string/preference_stamp_style"
                     android:summary="@string/preference_stamp_style_summary"
@@ -1202,19 +1205,19 @@
         android:key="preference_category_online"
         android:title="@string/preference_category_online"
         >
+<!--FYP-->
+<!--        <Preference-->
+<!--            android:key="preference_online_help"-->
+<!--            android:title="@string/preference_online_help"-->
+<!--            android:summary="@string/preference_online_help_summary"-->
+<!--            android:icon="@drawable/ic_help_outline_white_48dp"-->
+<!--            />-->
 
-        <Preference
-            android:key="preference_online_help"  
-            android:title="@string/preference_online_help"
-            android:summary="@string/preference_online_help_summary"
-            android:icon="@drawable/ic_help_outline_white_48dp"
-            />  
-
-        <Preference
-            android:key="preference_donate"  
-            android:title="@string/preference_donate"
-            android:summary="@string/preference_donate_summary"
-            />  
+<!--        <Preference-->
+<!--            android:key="preference_donate"-->
+<!--            android:title="@string/preference_donate"-->
+<!--            android:summary="@string/preference_donate_summary"-->
+<!--            />-->
 
         <!--  if we move this to another PreferenceGroup, we should update code for the findPreference() call -->
         <SwitchPreference
@@ -1231,12 +1234,12 @@
             android:icon="@drawable/ic_info_outline_white_48dp"
             />
 
-        <Preference
-            android:key="preference_privacy_policy"
-            android:title="@string/preference_privacy_policy"
-            android:summary="@string/preference_privacy_policy_text"
-            android:icon="@drawable/ic_info_outline_white_48dp"
-            />
+<!--        <Preference-->
+<!--            android:key="preference_privacy_policy"-->
+<!--            android:title="@string/preference_privacy_policy"-->
+<!--            android:summary="@string/preference_privacy_policy_text"-->
+<!--            android:icon="@drawable/ic_info_outline_white_48dp"-->
+<!--            />-->
 
         <PreferenceScreen
             android:key="preference_screen_settings_manager"

@@ -747,6 +747,8 @@ public class MainUI {
             resource = main_activity.getPreview().isVideo() ? R.drawable.take_photo : R.drawable.take_video;
             view.setImageResource(resource);
             view.setTag(resource); // for testing
+
+            //FYP
             view.setVisibility(View.INVISIBLE);
         }
     }

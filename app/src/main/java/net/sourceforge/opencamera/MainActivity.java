@@ -508,6 +508,7 @@ public class MainActivity extends Activity {
                 // but then enables it, we still shouldn't show the dialog until the new time Open Camera upgrades.
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt(PreferenceKeys.LatestVersionPreferenceKey, version_code);
+                //FYP
                 editor.putBoolean(PreferenceKeys.IsVideoPreferenceKey, true);
 
                 editor.apply();
