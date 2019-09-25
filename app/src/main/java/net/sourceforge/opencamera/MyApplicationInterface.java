@@ -1785,8 +1785,12 @@ public class MyApplicationInterface extends BasicApplicationInterface {
             final String preference_stamp_gpsformat = this.getStampGPSFormatPref();
             final String preference_units_distance = this.getUnitsDistancePref();
             final String preference_stamp_geo_address = this.getStampGeoAddressPref();
+
+            //FYP Can set these two to true to ignore user settings
+            // Direction will always be saved but not gps coords if "Store location data" is not enabled
             final boolean store_location = getGeotaggingPref();
             final boolean store_geo_direction = getGeodirectionPref();
+
             class SubtitleVideoTimerTask extends TimerTask {
                 OutputStreamWriter writer;
                 private int count = 1;
@@ -1853,7 +1857,7 @@ public class MyApplicationInterface extends BasicApplicationInterface {
                     // build subtitles
                     StringBuilder subtitles = new StringBuilder();
                     if( datetime_stamp.length() > 0 )
-                        subtitles.append(datetime_stamp).append("\n");
+                        subtitles.append(datetime_stamp+"|").append("\n");
 
                     if( gps_stamp.length() > 0 ) {
                         Address address = null;
@@ -1907,6 +1911,7 @@ public class MyApplicationInterface extends BasicApplicationInterface {
                                 subtitles.append(gps_stamp).append("\n");
                             }
                         }
+
                     }
 
                     if( subtitles.length() == 0 ) {
@@ -1941,6 +1946,8 @@ public class MyApplicationInterface extends BasicApplicationInterface {
                                     writer = new FileWriter(pfd_saf.getFileDescriptor());
                                 }
                             }
+
+
                             if( writer != null ) {
                                 writer.append(Integer.toString(count));
                                 writer.append('\n');
@@ -1948,8 +1955,8 @@ public class MyApplicationInterface extends BasicApplicationInterface {
                                 writer.append(" --> ");
                                 writer.append(subtitle_time_to);
                                 writer.append('\n');
-                                writer.append(subtitles.toString()); // subtitles should include the '\n' at the end
-                                writer.append('\n'); // additional newline to indicate end of this subtitle
+                                writer.append(subtitles.toString());
+                                writer.append('\n');
                                 writer.flush();
                                 // n.b., we flush rather than closing/reopening the writer each time, as appending doesn't seem to work with storage access framework
                             }

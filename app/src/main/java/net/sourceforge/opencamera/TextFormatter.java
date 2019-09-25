@@ -89,12 +89,13 @@ public class TextFormatter {
                 if( MyDebug.LOG )
                     Log.d(TAG, "location: " + location);
                 if( preference_stamp_gpsformat.equals("preference_stamp_gpsformat_dms") )
-                    gps_stamp += LocationSupplier.locationToDMS(location.getLatitude()) + ", " + LocationSupplier.locationToDMS(location.getLongitude());
+                    gps_stamp += LocationSupplier.locationToDMS(location.getLatitude()) + "|" + LocationSupplier.locationToDMS(location.getLongitude());
                 else
-                    gps_stamp += Location.convert(location.getLatitude(), Location.FORMAT_DEGREES) + ", " + Location.convert(location.getLongitude(), Location.FORMAT_DEGREES);
-                if( location.hasAltitude() ) {
-                    gps_stamp += ", " + getDistanceString(location.getAltitude(), preference_units_distance);
-                }
+                    gps_stamp += Location.convert(location.getLatitude(), Location.FORMAT_DEGREES) + "|" + Location.convert(location.getLongitude(), Location.FORMAT_DEGREES);
+// FYP disable altitude stored to subtitle
+                //                if( location.hasAltitude() ) {
+//                    gps_stamp += ", " + getDistanceString(location.getAltitude(), preference_units_distance);
+//                }
             }
             if( store_geo_direction ) {
                 float geo_angle = (float)Math.toDegrees(geo_direction);
@@ -104,8 +105,7 @@ public class TextFormatter {
                 if( MyDebug.LOG )
                     Log.d(TAG, "geo_angle: " + geo_angle);
                 if( gps_stamp.length() > 0 )
-                    gps_stamp += ", ";
-                gps_stamp += "" + Math.round(geo_angle) + (char)0x00B0;
+                gps_stamp += "" + "|" + Math.round(geo_angle);
             }
         }
         if( MyDebug.LOG )
