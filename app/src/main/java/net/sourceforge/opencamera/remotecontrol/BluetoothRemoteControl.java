@@ -97,8 +97,8 @@ public class BluetoothRemoteControl {
                 applicationInterface.getDrawPreview().onExtraOSDValuesChanged("-- \u00B0C", "-- m");
                 mainUI.updateRemoteConnectionIcon();
                 main_activity.setBrightnessToMinimumIfWanted();
-                if (mainUI.isExposureUIOpen())
-                    mainUI.toggleExposureUI();
+//                if (mainUI.isExposureUIOpen())
+//                    mainUI.toggleExposureUI();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 if( MyDebug.LOG )
                     Log.d(TAG, "Remote services discovered");
@@ -133,7 +133,7 @@ public class BluetoothRemoteControl {
                         if (mainUI.popupIsOpen()) {
                             mainUI.togglePopupSettings();
                         } else if (mainUI.isExposureUIOpen()) {
-                            mainUI.toggleExposureUI();
+                           // mainUI.toggleExposureUI();
                         } else {
                             main_activity.clickedSwitchVideo(null);
                         }
@@ -144,7 +144,7 @@ public class BluetoothRemoteControl {
                         // select the current option on a button on a selected line
                         if (!mainUI.popupIsOpen()) {
                             if (! mainUI.isExposureUIOpen()) {
-                                mainUI.toggleExposureUI();
+                                //mainUI.toggleExposureUI();
                             } else {
                                 mainUI.commandMenuExposure();
                             }

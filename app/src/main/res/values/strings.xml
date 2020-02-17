@@ -839,6 +839,7 @@
     <string name="remaining">Remaining</string> <!-- images remaining for "processing" -->
 
     <string name="preference_preview">Camera preview…</string>
+    <string name="upload">Upload</string>
 
     <string name="cycle_flash">Cycle flash</string>
     <string name="preference_show_cycle_flash">Show flash icon</string>

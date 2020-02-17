@@ -290,10 +290,11 @@ public class MainUI {
             }
             buttons_permanent.add(main_activity.findViewById(R.id.settings));
             buttons_permanent.add(main_activity.findViewById(R.id.popup));
-            buttons_permanent.add(main_activity.findViewById(R.id.exposure));
+           // buttons_permanent.add(main_activity.findViewById(R.id.exposure));
+            buttons_permanent.add(main_activity.findViewById(R.id.upload));
             //buttons_permanent.add(main_activity.findViewById(R.id.switch_video));
             //buttons_permanent.add(main_activity.findViewById(R.id.switch_camera));
-            buttons_permanent.add(main_activity.findViewById(R.id.exposure_lock));
+           // buttons_permanent.add(main_activity.findViewById(R.id.exposure_lock));
             buttons_permanent.add(main_activity.findViewById(R.id.white_balance_lock));
             buttons_permanent.add(main_activity.findViewById(R.id.cycle_raw));
             buttons_permanent.add(main_activity.findViewById(R.id.store_location));
@@ -913,8 +914,9 @@ public class MainUI {
                 // n.b., don't hide share and trash buttons, as they require immediate user input for us to continue
                 View switchCameraButton = main_activity.findViewById(R.id.switch_camera);
                 View switchVideoButton = main_activity.findViewById(R.id.switch_video);
-                View exposureButton = main_activity.findViewById(R.id.exposure);
-                View exposureLockButton = main_activity.findViewById(R.id.exposure_lock);
+                // exposureButton = main_activity.findViewById(R.id.exposure);
+                View uploadButton = main_activity.findViewById(R.id.upload);
+//                View exposureLockButton = main_activity.findViewById(R.id.exposure_lock);
                 View whiteBalanceLockButton = main_activity.findViewById(R.id.white_balance_lock);
                 View cycleRawButton = main_activity.findViewById(R.id.cycle_raw);
                 View storeLocationButton = main_activity.findViewById(R.id.store_location);
@@ -932,10 +934,10 @@ public class MainUI {
                 if( main_activity.getPreview().getCameraControllerManager().getNumberOfCameras() > 1 )
                     switchCameraButton.setVisibility(visibility);
                 switchVideoButton.setVisibility(visibility);
-                if( main_activity.supportsExposureButton() )
-                    exposureButton.setVisibility(visibility);
-                if( showExposureLockIcon() )
-                    exposureLockButton.setVisibility(visibility);
+//                if( main_activity.supportsExposureButton() )
+//                    exposureButton.setVisibility(visibility);
+//                if( showExposureLockIcon() )
+//                    exposureLockButton.setVisibility(visibility);
                 if( showWhiteBalanceLockIcon() )
                     whiteBalanceLockButton.setVisibility(visibility);
                 if( showCycleRawIcon() )
@@ -1028,8 +1030,9 @@ public class MainUI {
                 final int visibility_video = is_panorama_recording ? View.GONE : show_gui_photo ? View.VISIBLE : View.GONE; // for UI that is only hidden while taking photo
                 View switchCameraButton = main_activity.findViewById(R.id.switch_camera);
                 View switchVideoButton = main_activity.findViewById(R.id.switch_video);
-                View exposureButton = main_activity.findViewById(R.id.exposure);
-                View exposureLockButton = main_activity.findViewById(R.id.exposure_lock);
+                //View exposureButton = main_activity.findViewById(R.id.exposure);
+                View uploadButton = main_activity.findViewById(R.id.upload);
+               // View exposureLockButton = main_activity.findViewById(R.id.exposure_lock);
                 View whiteBalanceLockButton = main_activity.findViewById(R.id.white_balance_lock);
                 View cycleRawButton = main_activity.findViewById(R.id.cycle_raw);
                 View storeLocationButton = main_activity.findViewById(R.id.store_location);
@@ -1043,10 +1046,10 @@ public class MainUI {
                 if( main_activity.getPreview().getCameraControllerManager().getNumberOfCameras() > 1 )
                     switchCameraButton.setVisibility(visibility);
                 switchVideoButton.setVisibility(visibility);
-                if( main_activity.supportsExposureButton() )
-                    exposureButton.setVisibility(visibility_video); // still allow exposure when recording video
-                if( showExposureLockIcon() )
-                    exposureLockButton.setVisibility(visibility_video); // still allow exposure lock when recording video
+//                if( main_activity.supportsExposureButton() )
+//                    exposureButton.setVisibility(visibility_video); // still allow exposure when recording video
+//                if( showExposureLockIcon() )
+//                    exposureLockButton.setVisibility(visibility_video); // still allow exposure lock when recording video
                 if( showWhiteBalanceLockIcon() )
                     whiteBalanceLockButton.setVisibility(visibility_video); // still allow white balance lock when recording video
                 if( showCycleRawIcon() )
@@ -1088,12 +1091,12 @@ public class MainUI {
         });
     }
 
-    public void updateExposureLockIcon() {
-        ImageButton view = main_activity.findViewById(R.id.exposure_lock);
-        boolean enabled = main_activity.getPreview().isExposureLocked();
-        view.setImageResource(enabled ? R.drawable.exposure_locked : R.drawable.exposure_unlocked);
-        view.setContentDescription( main_activity.getResources().getString(enabled ? R.string.exposure_unlock : R.string.exposure_lock) );
-    }
+//    public void updateExposureLockIcon() {
+//        ImageButton view = main_activity.findViewById(R.id.exposure_lock);
+//        boolean enabled = main_activity.getPreview().isExposureLocked();
+//        view.setImageResource(enabled ? R.drawable.exposure_locked : R.drawable.exposure_unlocked);
+//        view.setContentDescription( main_activity.getResources().getString(enabled ? R.string.exposure_unlock : R.string.exposure_lock) );
+    //}
 
     public void updateWhiteBalanceLockIcon() {
         ImageButton view = main_activity.findViewById(R.id.white_balance_lock);
@@ -1183,7 +1186,7 @@ public class MainUI {
     public void updateOnScreenIcons() {
         if( MyDebug.LOG )
             Log.d(TAG, "updateOnScreenIcons");
-        this.updateExposureLockIcon();
+        //this.updateExposureLockIcon();
         this.updateWhiteBalanceLockIcon();
         this.updateCycleRawIcon();
         this.updateStoreLocationIcon();
@@ -1217,7 +1220,7 @@ public class MainUI {
     /**
      * Opens or close the exposure settings (ISO, white balance, etc)
      */
-    public void toggleExposureUI() {
+    public void selectUpload() {
         if( MyDebug.LOG )
             Log.d(TAG, "toggleExposureUI");
         closePopup();
@@ -1232,6 +1235,22 @@ public class MainUI {
             }
         }
     }
+
+//    public void toggleExposureUI() {
+//        if( MyDebug.LOG )
+//            Log.d(TAG, "toggleExposureUI");
+//        closePopup();
+//        mSelectingExposureUIElement = false;
+//        if( isExposureUIOpen() ) {
+//            clearSeekBar();
+//        }
+//        else if( main_activity.getPreview().getCameraController() != null ) {
+//            setupExposureUI();
+//            if (main_activity.getBluetoothRemoteControl().remoteEnabled()) {
+//                initRemoteControlForExposureUI();
+//            }
+//        }
+//    }
 
     private void initRemoteControlForExposureUI() {
         if( MyDebug.LOG )
@@ -2458,7 +2477,7 @@ public class MainUI {
                 break;
             case KeyEvent.KEYCODE_SLASH:
             case KeyEvent.KEYCODE_NUMPAD_DIVIDE:
-                toggleExposureUI();
+                //toggleExposureUI();
                 break;
         }
         return false;
@@ -2482,7 +2501,7 @@ public class MainUI {
             if( isSelectingExposureUIElement() ) {
                 // Close Exposure UI if new press on MENU
                 // while already selecting
-                toggleExposureUI();
+              //  toggleExposureUI();
             }
             else {
                 // Select current element in Exposure UI

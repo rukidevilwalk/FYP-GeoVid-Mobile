@@ -57,20 +57,45 @@
         />
 
     <!-- alpha of 0.5 flags up Google Play prelaunch warning about contrast ratio too low (2.92; should be at least 3)-->
-    <ImageButton
+
+        <ImageButton
         android:id="@+id/switch_video"
-        android:visibility="invisible"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_below="@+id/take_photo"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="41dp"
+        android:layout_marginLeft="41dp"
+        android:layout_marginTop="32dp"
+        android:alpha="0.55"
+        android:background="@null"
+        android:contentDescription="@string/switch_to_video"
+        android:onClick="clickedSwitchVideo"
         android:padding="10dp"
         android:scaleType="fitCenter"
-        android:contentDescription="@string/switch_to_video"
         android:src="@drawable/take_video"
-        android:alpha="0.55"
-        android:onClick="clickedSwitchVideo"
-        android:layout_below="@+id/take_photo"
-        android:background="@null"
-        />
+    />
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/upload"-->
+<!--        android:layout_width="60dp"-->
+<!--        android:layout_height="60dp"-->
+<!--        android:layout_below="@+id/take_photo"-->
+<!--        android:layout_alignStart="@+id/take_photo"-->
+<!--        android:layout_alignLeft="@+id/take_photo"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginStart="0dp"-->
+<!--        android:layout_marginLeft="0dp"-->
+<!--        android:layout_marginTop="0dp"-->
+<!--        android:layout_marginBottom="251dp"-->
+<!--        android:background="@null"-->
+<!--        android:contentDescription="@string/upload"-->
+<!--        android:onClick="clickedSwitchVideo"-->
+<!--        android:padding="10dp"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        android:src="@drawable/whiteupload24" />-->
 
     <ImageButton
         android:id="@+id/take_photo"
@@ -174,6 +199,8 @@
         android:onClick="clickedGallery"
         />
 
+
+
     <ImageButton
         android:id="@+id/settings"
         android:layout_width="@dimen/onscreen_button_size"
@@ -201,36 +228,35 @@
         android:backgroundTintMode="src_in"
         android:onClick="clickedPopupSettings"
         />
-    
-    <ImageButton
-        android:id="@+id/exposure"
-        android:layout_width="@dimen/onscreen_button_size"
-        android:layout_height="@dimen/onscreen_button_size"
-        android:padding="10dp"
-        android:scaleType="fitCenter"
-        android:contentDescription="@string/exposure"
-        android:src="@drawable/ic_exposure_white_48dp"
-        android:background="@color/icons_background"
-        android:backgroundTint="@color/icons_background_tint"
-        android:backgroundTintMode="src_in"
-        android:onClick="clickedExposure"
-        android:visibility="gone"
-        />
 
     <ImageButton
-        android:id="@+id/exposure_lock"
+        android:id="@+id/upload"
         android:layout_width="@dimen/onscreen_button_size"
         android:layout_height="@dimen/onscreen_button_size"
         android:padding="10dp"
         android:scaleType="fitCenter"
-        android:contentDescription="@string/exposure_lock"
-        android:src="@drawable/exposure_unlocked"
+        android:contentDescription="@string/upload"
+        android:src="@drawable/whiteupload48"
         android:background="@color/icons_background"
         android:backgroundTint="@color/icons_background_tint"
         android:backgroundTintMode="src_in"
-        android:onClick="clickedExposureLock"
-        android:visibility="gone"
+        android:onClick="clickedUpload"
         />
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/exposure_lock"-->
+<!--        android:layout_width="@dimen/onscreen_button_size"-->
+<!--        android:layout_height="@dimen/onscreen_button_size"-->
+<!--        android:padding="10dp"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        android:contentDescription="@string/exposure_lock"-->
+<!--        android:src="@drawable/exposure_unlocked"-->
+<!--        android:background="@color/icons_background"-->
+<!--        android:backgroundTint="@color/icons_background_tint"-->
+<!--        android:backgroundTintMode="src_in"-->
+<!--        android:onClick="clickedExposureLock"-->
+<!--        android:visibility="gone"-->
+<!--        />-->
 
 
     <ImageButton
@@ -596,8 +622,7 @@
     <FrameLayout
         android:id="@+id/locker"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 
     <ScrollView
         android:id="@+id/popup_container"

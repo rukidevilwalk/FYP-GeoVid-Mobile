@@ -8,7 +8,29 @@ import net.sourceforge.opencamera.remotecontrol.BluetoothRemoteControl;
 import net.sourceforge.opencamera.ui.FolderChooserDialog;
 import net.sourceforge.opencamera.ui.MainUI;
 import net.sourceforge.opencamera.ui.ManualSeekbars;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
+//import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.VideoView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -135,7 +157,7 @@ public class MainActivity extends Activity {
     private final ToastBoxer stamp_toast = new ToastBoxer();
     private final ToastBoxer changed_auto_stabilise_toast = new ToastBoxer();
     private final ToastBoxer white_balance_lock_toast = new ToastBoxer();
-    private final ToastBoxer exposure_lock_toast = new ToastBoxer();
+    private final ToastBoxer upload_toast = new ToastBoxer();
     private final ToastBoxer audio_control_toast = new ToastBoxer();
     private boolean block_startup_toast = false; // used when returning from Settings/Popup - if we're displaying a toast anyway, don't want to display the info toast too
 
@@ -169,7 +191,9 @@ public class MainActivity extends Activity {
     private static final float WATER_DENSITY_FRESHWATER = 1.0f;
     private static final float WATER_DENSITY_SALTWATER = 1.03f;
     private float mWaterDensity = 1.0f;
+    private static final int SELECT_VIDEO = 1;
 
+    private String selectedVideoPath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         long debug_time = 0;
@@ -1453,18 +1477,35 @@ public class MainActivity extends Activity {
         preview.showToast(white_balance_lock_toast, preview.isWhiteBalanceLocked() ? R.string.white_balance_locked : R.string.white_balance_unlocked);
     }
 
-    public void clickedExposureLock(View view) {
+//    public void clickedExposureLock(View view) {
+//        if( MyDebug.LOG )
+//            Log.d(TAG, "clickedExposureLock");
+//        this.preview.toggleExposureLock();
+//        mainUI.updateExposureLockIcon();
+//        preview.showToast(exposure_lock_toast, preview.isExposureLocked() ? R.string.exposure_locked : R.string.exposure_unlocked);
+//    }
+
+//    public void clickedExposure(View view) {
+//        if( MyDebug.LOG )
+//            Log.d(TAG, "clickedExposure");
+//        mainUI.toggleExposureUI();
+//    }
+    public void clickedUpload(View view) {
         if( MyDebug.LOG )
-            Log.d(TAG, "clickedExposureLock");
-        this.preview.toggleExposureLock();
-        mainUI.updateExposureLockIcon();
-        preview.showToast(exposure_lock_toast, preview.isExposureLocked() ? R.string.exposure_locked : R.string.exposure_unlocked);
+            Log.d(TAG, "clickedUpload");
+        //mainUI.selectUpload();
+        uploadGallery();
     }
 
-    public void clickedExposure(View view) {
+    private void uploadGallery() {
+
         if( MyDebug.LOG )
-            Log.d(TAG, "clickedExposure");
-        mainUI.toggleExposureUI();
+            Log.d(TAG, "openGallery");
+        Intent intent = new Intent();
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select a Video "), SELECT_VIDEO);
+
     }
 
     public void clickedSettings(View view) {
@@ -2010,10 +2051,14 @@ public class MainActivity extends Activity {
     private void checkDisableGUIIcons() {
         if( MyDebug.LOG )
             Log.d(TAG, "checkDisableGUIIcons");
-        if( !mainUI.showExposureLockIcon() ) {
-            View button = findViewById(R.id.exposure_lock);
-            button.setVisibility(View.GONE);
-        }
+//        if( !mainUI.showExposureLockIcon() ) {
+//            View button = findViewById(R.id.exposure_lock);
+//            button.setVisibility(View.GONE);
+
+//        if( !mainUI.showExposureLockIcon() ) {
+//           View button = findViewById(R.id.exposure_lock);
+//           button.setVisibility(View.GONE);
+//       }
         if( !mainUI.showWhiteBalanceLockIcon() ) {
             View button = findViewById(R.id.white_balance_lock);
             button.setVisibility(View.GONE);
@@ -2838,14 +2883,93 @@ public class MainActivity extends Activity {
         save_location_history_saf.updateFolderHistory(save_folder, true);
     }
 
+//    public String getPath(Uri uri) {
+//        String[] projection = { MediaStore.Images.Media.DATA };
+//        Cursor cursor = managedQuery(uri, projection, null, null, null);
+//        if(cursor!=null) {
+//            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+//            cursor.moveToFirst();
+//            return cursor.getString(column_index);
+//        }
+//        else return null;
+//    }
+
+    public String getPath(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        cursor.close();
+
+        cursor = getContentResolver().query(
+                android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+        cursor.close();
+
+        return path;
+    }
+
+    private void uploadVideo() {
+        class UploadVideo extends AsyncTask<Void, Void, String> {
+
+            ProgressDialog uploading;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                uploading = ProgressDialog.show(MainActivity.this, "Uploading File", "Please wait...", false, false);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                uploading.dismiss();
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                Upload u = new Upload();
+                String msg = u.uploadVideo(selectedVideoPath);
+                return msg;
+            }
+        }
+        UploadVideo uv = new UploadVideo();
+        uv.execute();
+    }
+
     /** Listens for the response from the Storage Access Framework dialog to select a folder
      *  (as opened with openFolderChooserDialogSAF()).
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+
         if( MyDebug.LOG )
             Log.d(TAG, "onActivityResult: " + requestCode);
         switch( requestCode ) {
+            case SELECT_VIDEO:
+               // selectedVideoPath = getPath(resultData.getData());
+                if (requestCode == 1 && resultCode == RESULT_OK && resultData != null){
+                    Uri selectedImageUri = resultData.getData();
+                    selectedVideoPath = getPath(selectedImageUri);
+                    try {
+                        if(selectedVideoPath == null) {
+                            Log.d(TAG,"selected video path = null!");
+                            finish();
+                        } else {
+                            uploadVideo();
+                        }
+                    } catch (Throwable e) {
+                        //#debug
+                        e.printStackTrace();
+                    }
+                }  else {
+                    return;
+                }
+
+
+                break;
             case CHOOSE_SAVE_FOLDER_SAF_CODE:
                 if( resultCode == RESULT_OK && resultData != null ) {
                     Uri treeUri = resultData.getData();
@@ -3631,8 +3755,8 @@ public class MainActivity extends Activity {
         // MainUI.showGUI()
         // However still nee to update visibility of icons where visibility depends on camera setup - e.g., exposure button
         // not supported for high speed video frame rates - see testTakeVideoFPSHighSpeedManual().
-        View exposureButton = findViewById(R.id.exposure);
-        exposureButton.setVisibility(supportsExposureButton() && !mainUI.inImmersiveMode() ? View.VISIBLE : View.GONE);
+//        View exposureButton = findViewById(R.id.exposure);
+//        exposureButton.setVisibility(supportsExposureButton() && !mainUI.inImmersiveMode() ? View.VISIBLE : View.GONE);
 
         // need to update some icons, e.g., white balance and exposure lock due to them being turned off when pause/resuming
         mainUI.updateOnScreenIcons();
