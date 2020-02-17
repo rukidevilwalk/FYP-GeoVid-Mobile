@@ -138,12 +138,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
 
             UserAccount jsonParser = new UserAccount();
 
-            private ProgressDialog pDialog;
-
             private static final String LOGIN_URL = "http://192.168.1.3:8000/api/users/login";
-
-            private static final String TAG_SUCCESS = "success";
-            private static final String TAG_MESSAGE = "message";
 
             @Override
             protected void onPreExecute() {
@@ -156,17 +151,15 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
 
                 try {
 
-
                     Log.d("request", "starting");
 
                     String string = jsonParser.makeHttpRequest(
                             LOGIN_URL, "LOGIN", args[0], args[1], args[2]);
-
                     if (string != null) {
-
-
                         return string;
                     }
+
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -177,25 +170,16 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
 
             protected void onPostExecute(String s) {
 
-                int success = 0;
-                String message = "";
+                MainActivity main_activity = (MainActivity) MyPreferenceFragment.this.getActivity();
+                Log.d(TAG, "Login Result: " + s);
 
-                if (pDialog != null && pDialog.isShowing()) {
-                    pDialog.dismiss();
-                }
-
-                if (s != null) {
-//                    Toast.makeText(MainActivity.this, json.toString(),
-//                            Toast.LENGTH_LONG).show();
-                }
-
-                if (success == 1) {
-                    Log.d("Success!", message);
+                if (s != "failed") {
+                    Log.d(TAG, "Login Successful");
+                    Toast.makeText(main_activity, "Login Successful!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.d("Failure", message);
+                    Log.d(TAG, "Login Failed");
+                    Toast.makeText(main_activity, "Login Failed!", Toast.LENGTH_SHORT).show();
                 }
-
-                Log.d(TAG, "LOGIN RESULT:" + s);
 
             }
         }
@@ -204,12 +188,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
 
             UserAccount jsonParser = new UserAccount();
 
-            private ProgressDialog pDialog;
-
             private static final String LOGIN_URL = "http://192.168.1.3:8000/api/users/register";
-
-            private static final String TAG_SUCCESS = "success";
-            private static final String TAG_MESSAGE = "message";
 
             @Override
             protected void onPreExecute() {
@@ -222,17 +201,15 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
 
                 try {
 
-
                     Log.d("request", "starting");
 
                     String string = jsonParser.makeHttpRequest(
                             LOGIN_URL, "REGISTER", args[0], args[1], args[2]);
 
                     if (string != null) {
-
-
                         return string;
                     }
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -243,25 +220,15 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
 
             protected void onPostExecute(String s) {
 
-                int success = 0;
-                String message = "";
+                MainActivity main_activity = (MainActivity) MyPreferenceFragment.this.getActivity();
 
-                if (pDialog != null && pDialog.isShowing()) {
-                    pDialog.dismiss();
-                }
-
-                if (s != null) {
-//                    Toast.makeText(MainActivity.this, json.toString(),
-//                            Toast.LENGTH_LONG).show();
-                }
-
-                if (success == 1) {
-                    Log.d("Success!", message);
+                if (s != "failed") {
+                    Log.d(TAG, "Registration Successful");
+                    Toast.makeText(main_activity, "Registration Successful!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.d("Failure", message);
+                    Log.d(TAG, "Registration Failed");
+                    Toast.makeText(main_activity, "Registration Failed!", Toast.LENGTH_SHORT).show();
                 }
-
-                Log.d(TAG, "REGISTER RESULT:" + s);
 
             }
         }
@@ -291,6 +258,9 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
                 return true;
             }
         });
+
+        Preference pref_pwd = findPreference("preference_password");
+
 
         final boolean supports_auto_stabilise = bundle.getBoolean("supports_auto_stabilise");
         if (MyDebug.LOG)
@@ -1730,6 +1700,8 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+
     }
 
     public void onPause() {
@@ -1775,6 +1747,18 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
             listPref.setValue(prefs.getString(key, ""));
         }
         setSummary(key);
+
+        if (key.equals("preference_email")) {
+            pref.setSummary(((EditTextPreference) pref).getText());
+        }
+
+
+        if (key.equals("preference_password")) {
+            EditText edit = ((EditTextPreference) pref).getEditText();
+            String newValue = edit.getTransformationMethod().getTransformation(key, edit).toString();
+            pref.setSummary(newValue);
+        }
+
     }
 
     /**

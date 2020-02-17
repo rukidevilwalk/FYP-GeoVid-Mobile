@@ -130,7 +130,7 @@ public class UserAccount {
             }
             return sb.toString();
         }else {
-            return "Could not login";
+            return "failed";
         }
 
     }

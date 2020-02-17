@@ -69,18 +69,18 @@
         android:key="preference_category_login"
         android:title="Account Management">
 
-        <PreferenceScreen android:title="Login" android:key="Login">
-            <EditTextPreference android:persistent="true" android:title="Email" android:key="preference_email"></EditTextPreference>
-            <EditTextPreference android:title="Password" android:persistent="true" android:inputType="textPassword" android:key="preference_password"></EditTextPreference>
-            <Preference android:layout="@layout/loginbuttons" android:key="@string/login_button"></Preference>
+        <PreferenceScreen android:title="Login" android:key="preference_login">
+            <EditTextPreference android:summary="Enter Email" android:persistent="true"  android:key="preference_email"></EditTextPreference>
+            <EditTextPreference android:summary="Enter Password"  android:persistent="true" android:inputType="textPassword" android:key="preference_password"></EditTextPreference>
+            <Preference android:title="Login" android:key="@string/login_button"></Preference>
 
         </PreferenceScreen>
 
-        <PreferenceScreen android:title="Register" android:key="Register">
-            <EditTextPreference android:persistent="true" android:title="Email" android:key="preference_remail"></EditTextPreference>
-            <EditTextPreference android:persistent="true" android:title="Username" android:key="preference_rusername"></EditTextPreference>
-            <EditTextPreference android:title="Password" android:persistent="true" android:inputType="textPassword" android:key="preference_rpassword"></EditTextPreference>
-            <Preference android:layout="@layout/registerbuttons" android:key="@string/register_button"></Preference>
+        <PreferenceScreen android:title="Register" android:key="preference_register">
+            <EditTextPreference android:summary="Enter Email" android:persistent="true" android:title="Email" android:key="preference_remail"></EditTextPreference>
+            <EditTextPreference android:summary="Enter Name" android:persistent="true" android:title="Username" android:key="preference_rusername"></EditTextPreference>
+            <EditTextPreference android:summary="Enter Password" android:persistent="true" android:inputType="textPassword" android:key="preference_rpassword"></EditTextPreference>
+            <Preference android:title="Register" android:key="@string/register_button"></Preference>
 
         </PreferenceScreen>
 
