@@ -49,7 +49,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
             }
 
-            // Get the layout for the App Widget and attach an on-click listener
+            // Get the login for the App Widget and attach an on-click listener
             // to the button
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
             views.setOnClickPendingIntent(R.id.widget_launch_open_camera, pendingIntent);

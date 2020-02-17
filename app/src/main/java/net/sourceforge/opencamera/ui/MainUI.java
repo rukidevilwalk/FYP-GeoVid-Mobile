@@ -379,7 +379,7 @@ public class MainUI {
                     for(View this_view : buttons_permanent) {
                         if( this_view.getVisibility() == View.VISIBLE ) {
                             if( MyDebug.LOG ) {
-                                Log.d(TAG, "set view layout for: " + this_view.getContentDescription());
+                                Log.d(TAG, "set view login for: " + this_view.getContentDescription());
                                 if( this_view==first_visible_view ) {
                                     Log.d(TAG,"    first visible view");
                                 }
@@ -389,7 +389,7 @@ public class MainUI {
                             // be careful if we change how the margins are laid out: it looks nicer when only the settings icon
                             // is displayed (when taking a photo) if it is still shown left-most, rather than centred; also
                             // needed for "pause preview" trash/icons to be shown properly (test by rotating the phone to update
-                            // the layout)
+                            // the login)
                             layoutParams.setMargins(0, this_view==first_visible_view ? 0 : margin/2, 0, this_view==last_visible_view ? 0 : margin/2);
                             layoutParams.width = button_size;
                             layoutParams.height = button_size;
@@ -605,7 +605,7 @@ public class MainUI {
                         public void onGlobalLayout() {
                             if( MyDebug.LOG )
                                 Log.d(TAG, "onGlobalLayout()");
-                            // We need to call setPopupViewRotation after the above layout param changes
+                            // We need to call setPopupViewRotation after the above login param changes
                             // have taken effect, otherwise we can have problems due to popup_height being incorrect.
                             // Example bugs:
                             // Left-handed UI, portrait: Restart and open popup, it doesn't appear until device is rotated.
@@ -2170,7 +2170,7 @@ public class MainUI {
         }
 
         // need to call layoutUI to make sure the new popup is oriented correctly
-        // but need to do after the layout has been done, so we have a valid width/height to use
+        // but need to do after the login has been done, so we have a valid width/height to use
         // n.b., even though we only need the portion of layoutUI for the popup container, there
         // doesn't seem to be any performance benefit in only calling that part
         popup_container.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -2180,7 +2180,7 @@ public class MainUI {
                         if( MyDebug.LOG )
                             Log.d(TAG, "onGlobalLayout()");
                         if( MyDebug.LOG )
-                            Log.d(TAG, "time after global layout: " + (System.currentTimeMillis() - time_s));
+                            Log.d(TAG, "time after global login: " + (System.currentTimeMillis() - time_s));
                         layoutUI(true);
                         if( MyDebug.LOG )
                             Log.d(TAG, "time after layoutUI: " + (System.currentTimeMillis() - time_s));

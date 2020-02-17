@@ -29,7 +29,7 @@ public class MyWidgetProviderTakePhoto extends AppWidgetProvider {
             Intent intent = new Intent(context, TakePhoto.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-            // Get the layout for the App Widget and attach an on-click listener
+            // Get the login for the App Widget and attach an on-click listener
             // to the button
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout_take_photo);
             views.setOnClickPendingIntent(R.id.widget_take_photo, pendingIntent);

@@ -7445,7 +7445,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         assertEquals(popup_height, test_popup_height);
     }
 
-    /* Tests with ui_right vs ui_top layout.
+    /* Tests with ui_right vs ui_top login.
      */
     public void testRightLayout() {
         Log.d(TAG, "testRightLayout");
@@ -7508,7 +7508,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         }
     }
 
-    /* Tests layout bug with popup menu.
+    /* Tests login bug with popup menu.
      * Note, in practice this doesn't seem to reproduce the problem, but keep the test anyway.
      * Currently not autotested as the problem isn't fixed, and this would just be a test that
      * occasionally fails (instead we work round the problem but not caching the popup when the
