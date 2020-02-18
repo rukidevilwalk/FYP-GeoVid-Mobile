@@ -1,54 +1,31 @@
 package net.sourceforge.opencamera;
 
-import net.sourceforge.opencamera.cameracontroller.CameraController;
-import net.sourceforge.opencamera.cameracontroller.CameraControllerManager2;
-import net.sourceforge.opencamera.preview.Preview;
-import net.sourceforge.opencamera.preview.VideoProfile;
-import net.sourceforge.opencamera.remotecontrol.BluetoothRemoteControl;
-import net.sourceforge.opencamera.ui.FolderChooserDialog;
-import net.sourceforge.opencamera.ui.MainUI;
-import net.sourceforge.opencamera.ui.ManualSeekbars;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
-//import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import android.Manifest;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -67,23 +44,6 @@ import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.AlertDialog;
-import android.app.KeyguardManager;
-import android.content.ActivityNotFoundException;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.renderscript.RenderScript;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
@@ -106,6 +66,28 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.ZoomControls;
+
+import net.sourceforge.opencamera.cameracontroller.CameraController;
+import net.sourceforge.opencamera.cameracontroller.CameraControllerManager2;
+import net.sourceforge.opencamera.preview.Preview;
+import net.sourceforge.opencamera.preview.VideoProfile;
+import net.sourceforge.opencamera.remotecontrol.BluetoothRemoteControl;
+import net.sourceforge.opencamera.ui.FolderChooserDialog;
+import net.sourceforge.opencamera.ui.MainUI;
+import net.sourceforge.opencamera.ui.ManualSeekbars;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+//import android.support.v7.app.AppCompatActivity;
 
 /** The main Activity for Open Camera.
  */
@@ -1490,23 +1472,7 @@ public class MainActivity extends Activity {
 //            Log.d(TAG, "clickedExposure");
 //        mainUI.toggleExposureUI();
 //    }
-    public void clickedUpload(View view) {
-        if( MyDebug.LOG )
-            Log.d(TAG, "clickedUpload");
-        //mainUI.selectUpload();
-        uploadGallery();
-    }
 
-    private void uploadGallery() {
-
-        if( MyDebug.LOG )
-            Log.d(TAG, "openGallery");
-        Intent intent = new Intent();
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select a Video "), SELECT_VIDEO);
-
-    }
 
     public void clickedSettings(View view) {
         if( MyDebug.LOG )
@@ -1901,6 +1867,35 @@ public class MainActivity extends Activity {
         // use commitAllowingStateLoss() instead of commit(), does to "java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState" crash seen on Google Play
         // see http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit
         getFragmentManager().beginTransaction().add(android.R.id.content, fragment, "PREFERENCE_FRAGMENT").addToBackStack(null).commitAllowingStateLoss();
+    }
+
+    //FYP
+
+    public void clickedUpload(View view) {
+        if( MyDebug.LOG )
+            Log.d(TAG, "clickedUpload");
+        //mainUI.selectUpload();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if(sharedPreferences.getBoolean(PreferenceKeys.preference_user_logged_in, false) ){
+
+            uploadGallery();
+        } else {
+            Log.d(TAG, "user not logged in");
+            preview.showToast(null, "Login to upload");
+          //  openSettings();
+        }
+
+    }
+
+    private void uploadGallery() {
+
+        if( MyDebug.LOG )
+            Log.d(TAG, "openGallery");
+        Intent intent = new Intent();
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select a Video "), SELECT_VIDEO);
+
     }
 
     public void updateForSettings() {

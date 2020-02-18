@@ -76,6 +76,11 @@
 
         </PreferenceScreen>
 
+        <Preference
+            android:key="preference_username"
+            android:summary=""
+            android:title="Current User" />
+
         <PreferenceScreen android:title="Register" android:key="preference_register">
             <EditTextPreference android:summary="Enter Email" android:persistent="true" android:title="Email" android:key="preference_remail"></EditTextPreference>
             <EditTextPreference android:summary="Enter Name" android:persistent="true" android:title="Username" android:key="preference_rusername"></EditTextPreference>
@@ -84,7 +89,7 @@
 
         </PreferenceScreen>
 
-        <ListPreference
+        <Preference
             android:key="preference_logout"
             android:summary=""
             android:title="Logout" />

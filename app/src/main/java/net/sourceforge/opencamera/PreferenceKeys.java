@@ -7,6 +7,11 @@ public class PreferenceKeys {
 
     // arguably the static methods here that don't receive an argument could just be static final strings? Though we may want to change some of them to be cameraId-specific in future
 
+    public static final String preference_user_logged_in_name = "user_is_logged_in_name";
+
+
+    public static final String preference_user_logged_in = "user_is_logged_in";
+
     /** If this preference is set, no longer show the intro dialog.
      */
     public static final String FirstTimePreferenceKey = "done_first_time";

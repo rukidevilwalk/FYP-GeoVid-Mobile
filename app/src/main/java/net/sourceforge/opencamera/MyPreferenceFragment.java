@@ -1,20 +1,14 @@
 package net.sourceforge.opencamera;
 
-import net.sourceforge.opencamera.cameracontroller.CameraController;
-import net.sourceforge.opencamera.preview.Preview;
-import net.sourceforge.opencamera.ui.FolderChooserDialog;
-
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageInfo;
@@ -22,7 +16,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,9 +24,11 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.preference.TwoStatePreference;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -47,14 +42,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
+import net.sourceforge.opencamera.cameracontroller.CameraController;
+import net.sourceforge.opencamera.preview.Preview;
+import net.sourceforge.opencamera.ui.FolderChooserDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,25 +54,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-
-import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.*;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-
-import java.util.HashMap;
 
 /**
  * Fragment to handle the Settings UI. Note that originally this was a
@@ -110,6 +81,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
      * so this code isn't necessary - but there shouldn't be harm to leave it here for future use.
      */
     private final HashSet<AlertDialog> dialogs = new HashSet<>();
+    private static String email ="";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,6 +89,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
             Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+
 
         final Bundle bundle = getArguments();
         this.cameraId = bundle.getInt("cameraId");
@@ -134,11 +107,69 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
 
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
+        // Save the default preferences so that they can be restored later on
+        final Preference preference_username = findPreference("preference_username");
+        final PreferenceScreen preference_login = (PreferenceScreen) findPreference("preference_login");
+
+        Preference logout_button = findPreference("preference_logout");
+        logout_button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Log.d(TAG, "Clicking logout button");
+
+                Preference email = findPreference("preference_username");
+                Preference logout = findPreference("preference_logout");
+                PreferenceCategory myCategory = (PreferenceCategory) findPreference("preference_category_login");
+                myCategory.addPreference(preference_login);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.putBoolean(PreferenceKeys.preference_user_logged_in, false);
+                editor.putString(PreferenceKeys.preference_user_logged_in_name, "");
+                editor.apply();
+
+                myCategory.removePreference(email);
+                myCategory.removePreference(logout);
+
+                MainActivity main_activity = (MainActivity) MyPreferenceFragment.this.getActivity();
+                Toast.makeText(main_activity, "Logged out!", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        final Preference preference_logout = findPreference("preference_logout");
+
+        if (!(sharedPreferences.getBoolean(PreferenceKeys.preference_user_logged_in, false))) {
+
+            PreferenceCategory myCategory = (PreferenceCategory) findPreference("preference_category_login");
+
+            Preference email = findPreference("preference_username");
+            Preference logout = findPreference("preference_logout");
+
+            myCategory.removePreference(logout);
+            myCategory.removePreference(email);
+
+            if (findPreference("preference_login") == null)
+                myCategory.addPreference(preference_login);
+        } else {
+
+            PreferenceCategory myCategory = (PreferenceCategory) findPreference("preference_category_login");
+
+            myCategory.removePreference(preference_login);
+
+            myCategory.addPreference(preference_username);
+            Preference emailPref = findPreference("preference_username");
+            emailPref.setTitle("Logged in as: "+sharedPreferences.getString(PreferenceKeys.preference_user_logged_in_name,""));
+
+            myCategory.addPreference(preference_logout);
+        }
+
+
+//        FYP
         class login extends AsyncTask<String, String, String> {
 
             UserAccount jsonParser = new UserAccount();
 
             private static final String LOGIN_URL = "http://192.168.1.3:8000/api/users/login";
+
 
             @Override
             protected void onPreExecute() {
@@ -150,7 +181,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
             protected String doInBackground(String... args) {
 
                 try {
-
+                    email = args[0];
                     Log.d("request", "starting");
 
                     String string = jsonParser.makeHttpRequest(
@@ -158,7 +189,6 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
                     if (string != null) {
                         return string;
                     }
-
 
 
                 } catch (Exception e) {
@@ -176,6 +206,30 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
                 if (s != "failed") {
                     Log.d(TAG, "Login Successful");
                     Toast.makeText(main_activity, "Login Successful!", Toast.LENGTH_SHORT).show();
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.clear();
+                    editor.putBoolean(PreferenceKeys.preference_user_logged_in, true);
+                    editor.putString(PreferenceKeys.preference_user_logged_in_name, email);
+                    editor.apply();
+
+
+                    PreferenceCategory myCategory = (PreferenceCategory) findPreference("preference_category_login");
+                    PreferenceScreen loginPref = (PreferenceScreen) findPreference("preference_login");
+                    myCategory.removePreference(loginPref);
+
+
+
+                        myCategory.addPreference(preference_username);
+                        myCategory.addPreference(preference_logout);
+
+
+
+                    Preference emailPref = findPreference("preference_username");
+                        emailPref.setTitle(email);
+
+
+                    preference_login.getDialog().dismiss();
                 } else {
                     Log.d(TAG, "Login Failed");
                     Toast.makeText(main_activity, "Login Failed!", Toast.LENGTH_SHORT).show();
@@ -222,7 +276,11 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
 
                 MainActivity main_activity = (MainActivity) MyPreferenceFragment.this.getActivity();
 
+
+
                 if (s != "failed") {
+                    PreferenceScreen registerPref = (PreferenceScreen) findPreference("preference_register");
+                    registerPref.getDialog().dismiss();
                     Log.d(TAG, "Registration Successful");
                     Toast.makeText(main_activity, "Registration Successful!", Toast.LENGTH_SHORT).show();
                 } else {
@@ -232,18 +290,22 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
 
             }
         }
-        Preference login_button = findPreference(getString(R.string.login_button));
-        login_button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Log.d(TAG, "Clicking login button");
 
-                String email = sharedPreferences.getString("preference_email", "");
-                String password = sharedPreferences.getString("preference_password", "");
-                new login().execute(email, password, "");
-                return true;
-            }
-        });
+        if (!(sharedPreferences.getBoolean(PreferenceKeys.preference_user_logged_in, false))) {
+            Preference login_button = findPreference(getString(R.string.login_button));
+            login_button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Log.d(TAG, "Clicking login button");
+                    String email = ((EditTextPreference) findPreference("preference_email")).getText();
+                    String password = ((EditTextPreference) findPreference("preference_password")).getText();
+                    Log.d(TAG, "email: " + email + " , password: " + password);
+                    new login().execute(email, password, "");
+                    return true;
+                }
+            });
+        }
+
 
         Preference register_button = findPreference(getString(R.string.register_button));
         register_button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -251,15 +313,13 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
             public boolean onPreferenceClick(Preference preference) {
                 Log.d(TAG, "Clicking register button");
 
-                String email = sharedPreferences.getString("preference_remail", "");
-                String password = sharedPreferences.getString("preference_rpassword", "");
-                String username = sharedPreferences.getString("preference_rusername", "");
+                String email = ((EditTextPreference) findPreference("preference_remail")).getText();
+                String password = ((EditTextPreference) findPreference("preference_rpassword")).getText();
+                String username = ((EditTextPreference) findPreference("preference_rusername")).getText();
                 new register().execute(email, password, username);
                 return true;
             }
         });
-
-        Preference pref_pwd = findPreference("preference_password");
 
 
         final boolean supports_auto_stabilise = bundle.getBoolean("supports_auto_stabilise");
@@ -1758,6 +1818,22 @@ public class MyPreferenceFragment extends PreferenceFragment implements OnShared
             String newValue = edit.getTransformationMethod().getTransformation(key, edit).toString();
             pref.setSummary(newValue);
         }
+
+        if (key.equals("preference_remail")) {
+            pref.setSummary(((EditTextPreference) pref).getText());
+        }
+
+
+        if (key.equals("preference_rpassword")) {
+            EditText edit = ((EditTextPreference) pref).getEditText();
+            String newValue = edit.getTransformationMethod().getTransformation(key, edit).toString();
+            pref.setSummary(newValue);
+        }
+        if (key.equals("preference_rusername")) {
+            pref.setSummary(((EditTextPreference) pref).getText());
+        }
+
+
 
     }
 
