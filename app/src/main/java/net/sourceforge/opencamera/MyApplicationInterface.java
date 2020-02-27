@@ -1,26 +1,5 @@
 package net.sourceforge.opencamera;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import net.sourceforge.opencamera.cameracontroller.CameraController;
-import net.sourceforge.opencamera.cameracontroller.RawImage;
-import net.sourceforge.opencamera.preview.ApplicationInterface;
-import net.sourceforge.opencamera.preview.BasicApplicationInterface;
-import net.sourceforge.opencamera.preview.Preview;
-import net.sourceforge.opencamera.preview.VideoProfile;
-import net.sourceforge.opencamera.ui.DrawPreview;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -34,7 +13,6 @@ import android.graphics.Rect;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.media.CamcorderProfile;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -53,6 +31,27 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+
+import net.sourceforge.opencamera.cameracontroller.CameraController;
+import net.sourceforge.opencamera.cameracontroller.RawImage;
+import net.sourceforge.opencamera.preview.ApplicationInterface;
+import net.sourceforge.opencamera.preview.BasicApplicationInterface;
+import net.sourceforge.opencamera.preview.Preview;
+import net.sourceforge.opencamera.preview.VideoProfile;
+import net.sourceforge.opencamera.ui.DrawPreview;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /** Our implementation of ApplicationInterface, see there for details.
  */
@@ -1778,8 +1777,8 @@ public class MyApplicationInterface extends BasicApplicationInterface {
             main_activity.getMainUI().setupExposureUI();
         }
         final int video_method = this.createOutputVideoMethod();
-        boolean dategeo_subtitles = getVideoSubtitlePref().equals("preference_video_subtitle_yes");
-        if( dategeo_subtitles && video_method != ApplicationInterface.VIDEOMETHOD_URI ) {
+        //boolean dategeo_subtitles = getVideoSubtitlePref().equals("preference_video_subtitle_yes");
+        if(video_method != ApplicationInterface.VIDEOMETHOD_URI ) {
             final String preference_stamp_dateformat = this.getStampDateFormatPref();
             final String preference_stamp_timeformat = this.getStampTimeFormatPref();
             final String preference_stamp_gpsformat = this.getStampGPSFormatPref();
@@ -1788,8 +1787,8 @@ public class MyApplicationInterface extends BasicApplicationInterface {
 
             //FYP Can set these two to true to ignore user settings
             // Direction will always be saved but not gps coords if "Store location data" is not enabled
-            final boolean store_location = getGeotaggingPref();
-            final boolean store_geo_direction = getGeodirectionPref();
+            final boolean store_location = true;
+            final boolean store_geo_direction = true;
 
             class SubtitleVideoTimerTask extends TimerTask {
                 OutputStreamWriter writer;
