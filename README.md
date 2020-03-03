@@ -1,4 +1,6 @@
-Geotagging Moving Video
+Final Year Project: Geotagging Moving Video
+
+Android Application
 
 The purpose of this project is to enable a user to view videos of certain location at certain time. These videos are captured by different sources and thus provide different angle of view.
 
